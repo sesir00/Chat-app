@@ -1,23 +1,35 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
-import { SignedIn, SignedOut, SignInButton, UserButton } from '@clerk/clerk-react';
-
+import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
+import { SignedIn, SignedOut, RedirectToSignIn } from "@clerk/clerk-react";
+import HomePage from "./Pages/HomePage";
+import LoginPage from "./Pages/LoginPage";
 
 function App() {
   return (
-    <>
-      <header>
-      <SignedOut>
-        <SignInButton />
-      </SignedOut>
-      <SignedIn>
-        <UserButton />
-      </SignedIn>
-    </header>
-    </>
-  )
+    <Router>
+      <Routes>
+        {/* Public route */}
+        <Route path="/login" element={<LoginPage />} />
+
+        {/* Protected route */}
+        <Route
+          path="/"
+          element={
+            <>
+              <SignedIn>
+                <HomePage />
+              </SignedIn>
+              <SignedOut>
+                <RedirectToSignIn />
+              </SignedOut>
+            </>
+          }
+        />
+
+        {/* Catch-all: redirect unknown routes */}
+        <Route path="*" element={<Navigate to="/" />} />
+      </Routes>
+    </Router>
+  );
 }
 
-export default App
+export default App;
